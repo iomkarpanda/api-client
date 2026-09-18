@@ -20,7 +20,12 @@ class Request(Widget):
         }
 
         TabbedContent {
+            height: 100%;
             padding: 1;
+        }
+
+        TabbedContent TabPane {
+            height: 1fr;
         }
 
 
