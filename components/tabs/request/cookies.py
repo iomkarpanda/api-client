@@ -4,23 +4,23 @@ from textual.widget import Widget
 from textual.widgets import Button, DataTable, Input
 
 
-class RequestHeader(Widget):
+class RequestCookies(Widget):
 
     BINDINGS = [
-        ("delete", "delete_header", "Delete"),
-        ("e", "edit_header", "Edit"),
+        ("delete", "delete_cookie", "Delete"),
+        ("e", "edit_cookie", "Edit"),
         ("escape", "cancel_edit", "Cancel edit"),
     ]
 
     _editing_row = None
 
     DEFAULT_CSS = """
-        RequestHeader {
+        RequestCookies {
             width: 100%;
             height: 100%;
         }
 
-        RequestHeader DataTable {
+        RequestCookies DataTable {
             width: 100%;
             height: 1fr;
             background: black;
@@ -39,19 +39,19 @@ class RequestHeader(Widget):
             }
         }
 
-        #header-controls {
+        #cookie-controls {
             width: 100%;
             height: 1;
             margin-top: 1;
         }
 
-        #header-controls Input {
+        #cookie-controls Input {
             width: 1fr;
             padding: 0 1;
             background: black;
         }
 
-        #header-controls Button {
+        #cookie-controls Button {
             width: auto;
             min-width: 5;
             height: 1;
@@ -61,9 +61,9 @@ class RequestHeader(Widget):
             color: white;
         }
 
-        #header-controls Button:hover,
-        #header-controls Button:focus,
-        #header-controls Button.-active {
+        #cookie-controls Button:hover,
+        #cookie-controls Button:focus,
+        #cookie-controls Button.-active {
             background: black;
             color: white;
             text-style: bold;
@@ -71,40 +71,33 @@ class RequestHeader(Widget):
     """
 
     def compose(self) -> ComposeResult:
-        yield DataTable(id="request-headers")
-        with Horizontal(id="header-controls"):
+        yield DataTable(id="request-cookies")
+        with Horizontal(id="cookie-controls"):
+            yield Input(placeholder="Key", id="cookie-key", compact=True)
+            yield Input(placeholder="Value", id="cookie-value", compact=True)
+            yield Button("Add", id="add-cookie", compact=True)
 
-
-            yield Input(placeholder="Key", id="header-key", compact=True)
-            yield Input(placeholder="Value", id="header-value", compact=True)
-            yield Button("Add", id="add-header", compact=True)
     def on_mount(self) -> None:
-        table = self.query_one("#request-headers", DataTable)
+        table = self.query_one("#request-cookies", DataTable)
         table.add_columns("Key", "Value")
         table.add_rows(
             [
-                ("Accept", "application/json"),
-                ("Content-Type", "application/json"),
-                ("Authorization", "Bearer sample-token"),
-                ("Cache-Control", "no-cache"),
-                ("Connection", "keep-alive"),
-                ("Host", "api.example.com"),
-                ("User-Agent", "API Client/1.0"),
-                ("X-Request-ID", "request-12345"),
-                ("X-Client-Version", "1.0.0"),
-                ("Accept-Encoding", "gzip, deflate"),
-                ("Accept-Language", "en-US"),
-                ("Origin", "https://app.example.com"),
+                ("session_id", "abc123def456"),
+                ("csrftoken", "kR8sT2yQ7w"),
+                ("user_id", "1024"),
+                ("theme", "dark"),
+                ("locale", "en-US"),
+                ("analytics", "enabled"),
             ]
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id != "add-header":
+        if event.button.id != "add-cookie":
             return
 
-        table = self.query_one("#request-headers", DataTable)
-        key_input = self.query_one("#header-key", Input)
-        value_input = self.query_one("#header-value", Input)
+        table = self.query_one("#request-cookies", DataTable)
+        key_input = self.query_one("#cookie-key", Input)
+        value_input = self.query_one("#cookie-value", Input)
         key = key_input.value.strip()
         value = value_input.value.strip()
 
@@ -127,8 +120,8 @@ class RequestHeader(Widget):
             return self._editing_row is not None
         return True
 
-    def action_edit_header(self) -> None:
-        table = self.query_one("#request-headers", DataTable)
+    def action_edit_cookie(self) -> None:
+        table = self.query_one("#request-cookies", DataTable)
         if not table.row_count:
             return
 
@@ -136,18 +129,18 @@ class RequestHeader(Widget):
         key, value = table.get_row(row_key)
         self._editing_row = row_key
 
-        self.query_one("#header-key", Input).value = str(key)
-        self.query_one("#header-value", Input).value = str(value)
-        self.query_one("#add-header", Button).label = "Save"
-        self.query_one("#header-key", Input).focus()
+        self.query_one("#cookie-key", Input).value = str(key)
+        self.query_one("#cookie-value", Input).value = str(value)
+        self.query_one("#add-cookie", Button).label = "Save"
+        self.query_one("#cookie-key", Input).focus()
 
     def action_cancel_edit(self) -> None:
         self._reset_edit()
-        self.query_one("#header-key", Input).value = ""
-        self.query_one("#header-value", Input).value = ""
+        self.query_one("#cookie-key", Input).value = ""
+        self.query_one("#cookie-value", Input).value = ""
 
-    def action_delete_header(self) -> None:
-        table = self.query_one("#request-headers", DataTable)
+    def action_delete_cookie(self) -> None:
+        table = self.query_one("#request-cookies", DataTable)
         if table.row_count:
             row_key = table.ordered_rows[table.cursor_row].key
             table.remove_row(row_key)
@@ -156,4 +149,4 @@ class RequestHeader(Widget):
 
     def _reset_edit(self) -> None:
         self._editing_row = None
-        self.query_one("#add-header", Button).label = "Add"
+        self.query_one("#add-cookie", Button).label = "Add"
