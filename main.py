@@ -49,7 +49,8 @@ class Tui(App):
         self.push_screen(TestScreen())
         
     def action_close_screen(self):
-        self.pop_screen()
+        if len(self.screen_stack) > 1:
+            self.pop_screen()
 
 if __name__  == "__main__":
     app = Tui()
