@@ -29,6 +29,11 @@ class SaveRequestScreen(Screen):
             background: black;
         }
 
+        #save-request-form SelectCurrent {
+            border: tall white;
+            background: black;
+        }
+
         #save-request-form Input {
             border: tall white;
             background: black;
@@ -36,7 +41,8 @@ class SaveRequestScreen(Screen):
         }
 
         #save-request-form Button {
-            width: 100%;
+            width: 1fr;
+            height: 3;
             border: none;
             background: black;
         }
@@ -63,7 +69,7 @@ class SaveRequestScreen(Screen):
     def compose(self) -> ComposeResult:
         form = Vertical(
             Select([], prompt="Save in collection", id="collection-select"),
-            Input(placeholder="Or new collection name", id="new-collection-name"),
+            Input(placeholder="New collection name (optional)", id="new-collection-name"),
             Input(placeholder="Endpoint name", id="endpoint-name"),
             Input(placeholder="URL", id="endpoint-url", value=self.url),
             Button("Save", id="save-request"),

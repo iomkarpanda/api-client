@@ -34,7 +34,7 @@ class ConfirmScreen(ModalScreen[bool]):
 
         #confirm-buttons Button {
             width: 1fr;
-            height: 1;
+            height: 3;
             min-width: 0;
             border: none;
             background: black;

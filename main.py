@@ -4,6 +4,7 @@ from components.response import Response
 from components.inputbar import InputBar
 from textual import work
 from textual.containers import Horizontal,Vertical
+from textual.theme import Theme
 from textual.widgets import Input
 from screens.edit_endpoint import EditEndpointScreen
 from screens.save_request import SaveRequestScreen
@@ -16,12 +17,37 @@ from db.responses import insert_response
 from db.tables import create_tables
 from services.request import METHODS, response_delay
 
+APP_THEME = Theme(
+    name="api-client",
+    primary="#4a90e2",
+    secondary="#16a085",
+    accent="#16a085",
+    success="#4ebf71",
+    warning="#ffa62b",
+    error="#ba3c5b",
+    foreground="#e0e0e0",
+    background="#000000",
+    surface="#000000",
+    panel="#000000",
+    dark=True,
+    variables={
+        "border-blurred": "#4a90e2",
+        "input-selection-background": "#264f78",
+        "block-cursor-background": "#16a085",
+        "block-cursor-foreground": "#ffffff",
+        "block-cursor-text-style": "bold",
+        "block-cursor-blurred-background": "#0e5c4b",
+        "block-cursor-blurred-foreground": "#e0e0e0",
+        "block-hover-background": "#123a33",
+    },
+)
+
 class Tui(App):
 
-    BINDINGS = [('ctrl+o','add_screen','Test Screen'),
-                ('ctrl+s','save_request','Save Request'),
+    BINDINGS = [('ctrl+o','add_screen','Test screen'),
+                ('ctrl+s','save_request','Save request'),
                 ('f2','edit_endpoint','Edit endpoint'),
-                ('escape','close_screen','Close Test Screen')]
+                ('escape','close_screen','Close screen')]
 
 
     CSS = """
@@ -51,6 +77,8 @@ class Tui(App):
         super().__init__()
         self.current_endpoint_id: int | None = None
         self.current_request_id: int | None = None
+        self.register_theme(APP_THEME)
+        self.theme = "api-client"
 
     def on_mount(self) -> None:
         create_tables()

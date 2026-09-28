@@ -1,8 +1,6 @@
-from textual.app import ComposeResult
-from textual.widget import Widget
-from textual.widgets import Static
+from components.tabs.empty import EmptyState
 
 
-class RequestScripts(Widget):
-    def compose(self) -> ComposeResult:
-        yield Static("Pre-request script")
+class RequestScripts(EmptyState):
+    def __init__(self) -> None:
+        super().__init__("Pre-request scripts are not implemented yet")

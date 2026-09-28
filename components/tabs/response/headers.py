@@ -1,6 +1,6 @@
 from textual.app import ComposeResult
 from textual.widget import Widget
-from textual.widgets import DataTable
+from textual.widgets import DataTable, Static
 
 
 class ResponseHeaders(Widget):
@@ -9,6 +9,12 @@ class ResponseHeaders(Widget):
         ResponseHeaders {
             width: 100%;
             height: 100%;
+        }
+
+        ResponseHeaders Static {
+            height: 1;
+            padding: 0 1;
+            color: #808080;
         }
 
         ResponseHeaders DataTable {
@@ -32,6 +38,7 @@ class ResponseHeaders(Widget):
     """
 
     def compose(self) -> ComposeResult:
+        yield Static("No headers yet", id="response-headers-hint")
         yield DataTable(id="response-headers")
 
     def on_mount(self) -> None:
@@ -42,3 +49,5 @@ class ResponseHeaders(Widget):
         table.clear()
         for key, value in rows:
             table.add_row(str(key), str(value))
+
+        self.query_one("#response-headers-hint", Static).display = not table.row_count

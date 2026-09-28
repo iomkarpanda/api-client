@@ -15,6 +15,15 @@ class RequestBody(Widget):
             height: 1fr;
             background: black;
         }
+
+        #request-body .text-area--gutter {
+            background: black;
+            color: #585858;
+        }
+
+        #request-body .text-area--cursor-line {
+            background: #151515;
+        }
     """
 
     def compose(self) -> ComposeResult:

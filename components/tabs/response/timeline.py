@@ -17,6 +17,12 @@ class ResponseTimeline(Widget):
             margin-bottom: 1;
         }
 
+        #response-history-hint {
+            height: 1;
+            padding: 0 1;
+            color: #808080;
+        }
+
         #response-history {
             width: 100%;
             height: 1fr;
@@ -44,6 +50,7 @@ class ResponseTimeline(Widget):
 
     def compose(self) -> ComposeResult:
         yield Static("", id="response-timeline-info")
+        yield Static("No responses yet", id="response-history-hint")
         yield DataTable(id="response-history")
 
     def on_mount(self) -> None:
@@ -75,6 +82,8 @@ class ResponseTimeline(Widget):
                 self._format_size(len(body or "")),
                 key=str(response_id),
             )
+
+        self.query_one("#response-history-hint", Static).display = not rows
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
         event.stop()

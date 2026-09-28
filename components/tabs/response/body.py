@@ -17,6 +17,15 @@ class ResponseBody(Widget):
             height: 1fr;
             background: black;
         }
+
+        #response-body .text-area--gutter {
+            background: black;
+            color: #585858;
+        }
+
+        #response-body .text-area--cursor-line {
+            background: #151515;
+        }
     """
 
     def compose(self) -> ComposeResult:

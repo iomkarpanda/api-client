@@ -29,7 +29,8 @@ class EditEndpointScreen(Screen):
         }
 
         #edit-endpoint-form Button {
-            width: 100%;
+            width: 1fr;
+            height: 3;
             border: none;
             background: black;
         }

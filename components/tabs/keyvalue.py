@@ -1,7 +1,7 @@
 from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.widget import Widget
-from textual.widgets import Button, DataTable, Input
+from textual.widgets import Button, DataTable, Input, Static
 
 
 class KeyValueEditor(Widget):
@@ -19,6 +19,12 @@ class KeyValueEditor(Widget):
         KeyValueEditor {
             width: 100%;
             height: 100%;
+        }
+
+        KeyValueEditor Static {
+            height: 1;
+            padding: 0 1;
+            color: #808080;
         }
 
         KeyValueEditor DataTable {
@@ -76,6 +82,7 @@ class KeyValueEditor(Widget):
         self.prefix = prefix
 
     def compose(self) -> ComposeResult:
+        yield Static("No entries yet", id=f"{self.prefix}-hint")
         yield DataTable(id=self.prefix)
         with Horizontal(id=f"{self.prefix}-controls"):
             yield Input(placeholder="Key", id=f"{self.prefix}-key", compact=True)
@@ -90,6 +97,8 @@ class KeyValueEditor(Widget):
         table.clear()
         for key, value in (values or {}).items():
             table.add_row(str(key), str(value))
+
+        self.query_one(f"#{self.prefix}-hint", Static).display = not table.row_count
 
     def values(self) -> dict:
         table = self.query_one(f"#{self.prefix}", DataTable)
@@ -117,6 +126,7 @@ class KeyValueEditor(Widget):
         else:
             table.add_row(key, value)
 
+        self.query_one(f"#{self.prefix}-hint", Static).display = False
         self._reset_edit()
         key_input.value = ""
         value_input.value = ""
@@ -153,6 +163,7 @@ class KeyValueEditor(Widget):
             table.remove_row(row_key)
             if row_key == self._editing_row:
                 self.action_cancel_edit()
+            self.query_one(f"#{self.prefix}-hint", Static).display = not table.row_count
 
     def _reset_edit(self) -> None:
         self._editing_row = None

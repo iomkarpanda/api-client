@@ -1,6 +1,6 @@
 from textual.app import ComposeResult
 from textual.widget import Widget
-from textual.widgets import DataTable
+from textual.widgets import DataTable, Static
 
 
 class ResponseCookies(Widget):
@@ -9,6 +9,12 @@ class ResponseCookies(Widget):
         ResponseCookies {
             width: 100%;
             height: 100%;
+        }
+
+        ResponseCookies Static {
+            height: 1;
+            padding: 0 1;
+            color: #808080;
         }
 
         ResponseCookies DataTable {
@@ -32,6 +38,7 @@ class ResponseCookies(Widget):
     """
 
     def compose(self) -> ComposeResult:
+        yield Static("No cookies yet", id="response-cookies-hint")
         yield DataTable(id="response-cookies")
 
     def on_mount(self) -> None:
@@ -42,3 +49,5 @@ class ResponseCookies(Widget):
         table.clear()
         for key, value in rows:
             table.add_row(str(key), str(value))
+
+        self.query_one("#response-cookies-hint", Static).display = not table.row_count

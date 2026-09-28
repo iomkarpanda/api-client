@@ -1,3 +1,4 @@
+from rich.text import Text
 from textual.widgets import Select,Input,Button
 from textual.widget import Widget
 from textual.containers import Horizontal
@@ -7,6 +8,15 @@ from screens.save_request import SaveRequestScreen
 class InputBar(Widget):
 
     METHODS = {"get", "post", "put", "delete", "patch", "options"}
+
+    METHOD_COLORS = {
+        "GET": "#00ff00",
+        "POST": "#ffff00",
+        "PUT": "#5555ff",
+        "PATCH": "#ff55ff",
+        "DELETE": "#ff5555",
+        "OPTIONS": "#55ffff",
+    }
 
     DEFAULT_CSS = """
 
@@ -22,12 +32,18 @@ class InputBar(Widget):
         #method {
             width: 15% !important;
             min-width: 0;
-            max-height: 3;
+            height: 3;
+            margin-right: 1;
+            background: black;
+        }
+
+        #method SelectCurrent {
+            border: tall white;
             background: black;
         }
 
         #endpoint {
-            width: 65%;
+            width: 63%;
             min-width: 0;
             border: tall white;
             background: black;
@@ -60,15 +76,18 @@ class InputBar(Widget):
     def compose(self):
 
         select = Select((
-            ('GET','get'),
-            ('POST','post'),
-            ('PUT','put'),
-            ('DELETE','delete'),
-            ('PATCH','patch'),
-            ('OPTIONS','options')
-        ), id="method")
+            (self._method_prompt("GET"), "get"),
+            (self._method_prompt("POST"), "post"),
+            (self._method_prompt("PUT"), "put"),
+            (self._method_prompt("DELETE"), "delete"),
+            (self._method_prompt("PATCH"), "patch"),
+            (self._method_prompt("OPTIONS"), "options"),
+        ), allow_blank=False, id="method")
         inp = Input(placeholder="Enter endpoint", id="endpoint")
         yield Horizontal(select, inp, Button('Send', id="send"), Button('Save', id="save"))
+
+    def _method_prompt(self, method: str) -> Text:
+        return Text(method, style=f"bold {self.METHOD_COLORS[method]}")
 
     def set_request(self, method: str | None, url: str) -> None:
         select = self.query_one("#method", Select)

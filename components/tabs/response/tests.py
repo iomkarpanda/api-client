@@ -1,8 +1,6 @@
-from textual.app import ComposeResult
-from textual.widget import Widget
-from textual.widgets import Static
+from components.tabs.empty import EmptyState
 
 
-class ResponseTests(Widget):
-    def compose(self) -> ComposeResult:
-        yield Static("Response tests")
+class ResponseTests(EmptyState):
+    def __init__(self) -> None:
+        super().__init__("Response tests are not implemented yet")

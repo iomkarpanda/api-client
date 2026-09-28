@@ -24,7 +24,7 @@ class Response(Widget):
 
         TabbedContent{
             height: 100%;
-            padding: 1;
+            padding: 1 1 0 1;
         }
 
         TabbedContent TabPane {
