@@ -35,19 +35,10 @@ class ResponseHeaders(Widget):
         yield DataTable(id="response-headers")
 
     def on_mount(self) -> None:
+        self.query_one("#response-headers", DataTable).add_columns("Key", "Value")
+
+    def set_rows(self, rows) -> None:
         table = self.query_one("#response-headers", DataTable)
-        table.add_columns("Key", "Value")
-        table.add_rows(
-            [
-                ("Content-Type", "application/json; charset=utf-8"),
-                ("Content-Length", "482"),
-                ("Server", "nginx/1.24.0"),
-                ("Cache-Control", "no-store"),
-                ("Connection", "keep-alive"),
-                ("Date", "20 Sep 2026 10:15:30 GMT"),
-                ("X-Request-ID", "request-12345"),
-                ("X-RateLimit-Limit", "100"),
-                ("X-RateLimit-Remaining", "97"),
-                ("Strict-Transport-Security", "max-age=31536000"),
-            ]
-        )
+        table.clear()
+        for key, value in rows:
+            table.add_row(str(key), str(value))

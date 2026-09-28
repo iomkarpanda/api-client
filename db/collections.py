@@ -1,4 +1,4 @@
-from db_client import database
+from db.db_client import database
 
 def insert_collection(collection_name:str):
     database.execute(

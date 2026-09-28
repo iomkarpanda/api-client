@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import TabPane
 from components.tabbed import HelpTabbedContent
 from components.tabs.request.headers import RequestHeader
-from components.tabs.request.authorization import RequestHeader as Authorization
+from components.tabs.request.authorization import Authorization
 from components.tabs.request.params import RequestParams
 from components.tabs.request.body import RequestBody
 from components.tabs.request.cookies import RequestCookies
@@ -53,3 +53,21 @@ class Request(Widget):
             yield TabPane("Cookies", RequestCookies(), id="cookies")
             yield TabPane("Scripts", RequestScripts(), id="scripts")
             yield TabPane("Tests", RequestTests(), id="tests")
+
+    def load_config(self, request_row: tuple | None) -> None:
+        """Load a requests row: (id, endpoint_id, method, headers, cookies, params, authorization, body, ...)."""
+        row = request_row
+        self.query_one(RequestHeader).load(row[3] if row else None)
+        self.query_one(RequestCookies).load(row[4] if row else None)
+        self.query_one(RequestParams).load(row[5] if row else None)
+        self.query_one(Authorization).load(row[6] if row else None)
+        self.query_one(RequestBody).load(row[7] if row else "")
+
+    def config(self) -> dict:
+        return {
+            "headers": self.query_one(RequestHeader).values(),
+            "cookies": self.query_one(RequestCookies).values(),
+            "params": self.query_one(RequestParams).values(),
+            "authorization": self.query_one(Authorization).values(),
+            "body": self.query_one(RequestBody).value() or None,
+        }

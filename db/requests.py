@@ -1,6 +1,6 @@
 import json
 
-from db_client import database
+from db.db_client import database
 
 
 def _encode_json(value):
@@ -28,7 +28,7 @@ def insert_request(
     authorization: object | None = None,
     body: str | None = None,
 ):
-    database.execute(
+    cursor = database.execute(
         "INSERT INTO requests "
         "(endpoint_id, method, headers, cookies, params, authorization, body) "
         "VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -43,6 +43,7 @@ def insert_request(
         ),
     )
     database.commit()
+    return cursor.lastrowid
 
 def get_requests(endpoint_id: int):
     cursor = database.execute(
@@ -52,6 +53,15 @@ def get_requests(endpoint_id: int):
         (endpoint_id,),
     )
     return [_decode_request(row) for row in cursor.fetchall()]
+
+def get_latest_request(endpoint_id: int):
+    cursor = database.execute(
+        "SELECT id, endpoint_id, method, headers, cookies, params, "
+        "authorization, body, created_at, updated_at "
+        "FROM requests WHERE endpoint_id = ? ORDER BY id DESC LIMIT 1",
+        (endpoint_id,),
+    )
+    return _decode_request(cursor.fetchone())
 
 def get_request(request_id: int):
     cursor = database.execute(

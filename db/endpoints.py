@@ -1,4 +1,4 @@
-from db_client import database
+from db.db_client import database
 
 def insert_endpoint(collection_id: int, name: str, url: str):
     database.execute(

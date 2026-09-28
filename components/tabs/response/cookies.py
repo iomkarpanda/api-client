@@ -35,13 +35,10 @@ class ResponseCookies(Widget):
         yield DataTable(id="response-cookies")
 
     def on_mount(self) -> None:
+        self.query_one("#response-cookies", DataTable).add_columns("Key", "Value")
+
+    def set_rows(self, rows) -> None:
         table = self.query_one("#response-cookies", DataTable)
-        table.add_columns("Key", "Value")
-        table.add_rows(
-            [
-                ("session_id", "abc123def456"),
-                ("csrftoken", "kR8sT2yQ7w"),
-                ("tracking_id", "trk-998877"),
-                ("preferred_language", "en-US"),
-            ]
-        )
+        table.clear()
+        for key, value in rows:
+            table.add_row(str(key), str(value))

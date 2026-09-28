@@ -1,6 +1,6 @@
 import json
 
-from db_client import database
+from db.db_client import database
 
 
 def _encode_json(value):

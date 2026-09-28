@@ -1,7 +1,6 @@
-from textual.widgets import Static
-from textual.widget import Widget
+from components.tabs.keyvalue import KeyValueEditor
 
-class RequestHeader(Widget):
 
-    def compose(self):
-        yield Static("Authorization")
+class Authorization(KeyValueEditor):
+    def __init__(self) -> None:
+        super().__init__(prefix="request-authorization")
